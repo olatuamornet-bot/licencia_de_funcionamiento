@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Licencia de Funcionamiento - MPT</title>
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    background: linear-gradient(180deg, #eaf0f9 0%, #f6f8fc 100%);
+    background-attachment: fixed;
+    color: #1d2a3a;
+    min-height: 100vh;
+}
+
+header {
+    background: linear-gradient(135deg, #12305a 0%, #1d5a96 60%, #2a8aa8 100%);
+    color: white;
+    text-align: center;
+    padding: 38px 15px 70px 15px;
+}
+
+header h1 {
+    margin: 0 0 8px 0;
+    font-size: 30px;
+    letter-spacing: 0.5px;
+}
+
+header h1::before {
+    content: "🏛️ ";
+}
+
+header p {
+    margin: 0;
+    font-size: 15px;
+    opacity: 0.9;
+}
+
+#progreso {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    max-width: 760px;
+    margin: -38px auto 0 auto;
+    padding: 14px 16px;
+    background-color: white;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(18, 48, 90, 0.18);
+}
+
+.indicador {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 30px;
+    color: #8793a3;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.indicador span {
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+    text-align: center;
+    border-radius: 50%;
+    background-color: #d5dce6;
+    color: white;
+    font-size: 13px;
+}
+
+.indicador.activo {
+    background: linear-gradient(135deg, #1d5a96, #2a8aa8);
+    color: white;
+    box-shadow: 0 4px 10px rgba(29, 90, 150, 0.35);
+}
+
+.indicador.activo span {
+    background-color: white;
+    color: #1d5a96;
+}
+
+.indicador.hecho {
+    background-color: #e4f5ea;
+    color: #1f8a4c;
+}
+
+.indicador.hecho span {
+    background-color: #1f8a4c;
+}
+
+.indicador.hecho span::before {
+    content: "✓";
+}
+
+.indicador.hecho span {
+    font-size: 0;
+}
+
+.indicador.hecho span::before {
+    font-size: 13px;
+}
+
+main {
+    max-width: 760px;
+    margin: 22px auto 40px auto;
+    padding: 0 12px;
+}
+
+.paso {
+    display: none;
+    background-color: white;
+    padding: 28px;
+    border-radius: 16px;
+    box-shadow: 0 8px 28px rgba(18, 48, 90, 0.12);
+    animation: aparecer 0.35s ease;
+}
+
+.paso.visible {
+    display: block;
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.oculto {
+    display: none;
+}
+
+h2 {
+    margin: 0 0 6px 0;
+    color: #12305a;
+    font-size: 23px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid #2a8aa8;
+}
+
+h3 {
+    color: white;
+    background: linear-gradient(90deg, #1d5a96, #2a8aa8);
+    padding: 9px 14px;
+    border-radius: 8px;
+    font-size: 15px;
+    margin: 28px 0 6px 0;
+}
+
+label {
+    display: block;
+    margin-top: 14px;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #34475e;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="date"],
+input[type="file"],
+select,
+textarea {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1.5px solid #cdd6e2;
+    border-radius: 9px;
+    font-size: 15px;
+    font-family: inherit;
+    background-color: #fafbfd;
+    color: #1d2a3a;
+    transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #2a8aa8;
+    background-color: white;
+    box-shadow: 0 0 0 4px rgba(42, 138, 168, 0.18);
+}
+
+input[type="checkbox"] {
+    margin-right: 8px;
+    width: 17px;
+    height: 17px;
+    accent-color: #1d5a96;
+    vertical-align: middle;
+}
+
+label:has(input[type="checkbox"]) {
+    font-weight: 500;
+    background-color: #f3f7fc;
+    border: 1px solid #dde5f0;
+    border-radius: 9px;
+    padding: 10px 12px;
+}
+
+textarea {
+    height: 90px;
+    resize: vertical;
+}
+
+.botones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.accion,
+.volver {
+    margin-top: 24px;
+    padding: 12px 26px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: inherit;
+    transition: transform 0.15s, box-shadow 0.15s, background-color 0.15s;
+}
+
+.botones .accion,
+.botones .volver {
+    margin-top: 0;
+}
+
+.accion {
+    background: linear-gradient(135deg, #1f9d57, #2bb673);
+    color: white;
+    box-shadow: 0 5px 14px rgba(31, 157, 87, 0.35);
+}
+
+.accion:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(31, 157, 87, 0.4);
+}
+
+.volver {
+    background-color: #e6edf6;
+    color: #1d5a96;
+}
+
+.volver:hover {
+    background-color: #d6e1ef;
+}
+
+.resultado {
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    display: none;
+    white-space: pre-line;
+    line-height: 1.5;
+    font-size: 15px;
+}
+
+.resultado.ok {
+    display: block;
+    background-color: #e8f7ee;
+    border-left: 6px solid #1f9d57;
+    color: #14532d;
+}
+
+.resultado.error {
+    display: block;
+    background-color: #fdecec;
+    border-left: 6px solid #d32f2f;
+    color: #7f1d1d;
+}
+
+.resultado.aviso {
+    display: block;
+    background-color: #fff6dc;
+    border-left: 6px solid #e0a000;
+    color: #6b4e00;
+}
+
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 23px;
+    }
+
+    .paso {
+        padding: 18px;
+    }
+
+    .indicador {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>Trámite de Licencia de Funcionamiento</h1>
+<p>Municipalidad Provincial de Trujillo - Equipo 06</p>
+</header>
+
+<div id="progreso">
+<div class="indicador activo" id="i1"><span>1</span>Formulario</div>
+<div class="indicador" id="i2"><span>2</span>Personería</div>
+<div class="indicador" id="i3"><span>3</span>Ruta</div>
+<div class="indicador" id="i4"><span>4</span>Inspección</div>
+</div>
+
+<main>
+
+<section id="paso1" class="paso visible">
+<h2>Paso 1: Formulario de licencia de funcionamiento</h2>
+
+<label>Fecha</label>
+<input type="date" id="fFecha">
+
+<h3>I. Modalidad de trámite</h3>
+<select id="modalidad" onchange="cambiarModalidad()">
+<option value="1">1 = Licencia de funcionamiento indeterminada</option>
+<option value="2">2 = Licencia de funcionamiento temporal</option>
+<option value="3">3 = Licencia más autorización de anuncio publicitario</option>
+<option value="4">4 = Licencia para cesionario</option>
+<option value="5">5 = Licencia para mercado, galería o centro comercial</option>
+<option value="6">6 = Cambio de denominación o nombre comercial</option>
+<option value="7">7 = Cese de actividades</option>
+<option value="8">8 = Transferencia de licencia de funcionamiento</option>
+<option value="9">9 = Otros</option>
+</select>
+<div id="extra6" class="oculto">
+<label>Nº de licencia de funcionamiento</label>
+<input type="text" id="fNumLic">
+<label>Nueva denominación o nombre comercial</label>
+<input type="text" id="fNuevoNombre">
+</div>
+<div id="extra8" class="oculto">
+<label>Copia simple del contrato de transferencia</label>
+<input type="file" id="fContrato">
+</div>
+<div id="extra9" class="oculto">
+<label>Especificar</label>
+<input type="text" id="fOtros">
+</div>
+
+<h3>II. Datos del solicitante</h3>
+<label>Apellidos y nombres / Razón social</label>
+<input type="text" id="fNombre">
+<label>DNI o carné de extranjería (8 dígitos)</label>
+<input type="text" id="fDni">
+<label>RUC (11 dígitos)</label>
+<input type="text" id="fRuc">
+<label>Teléfono (9 dígitos)</label>
+<input type="text" id="fTelefono">
+<label>Correo electrónico</label>
+<input type="email" id="fCorreo">
+<label>Tipo de vía</label>
+<select id="fVia">
+<option>Av.</option><option>Jr.</option><option>Ca.</option><option>Pje.</option><option>Otros</option>
+</select>
+<label>Número, interior, manzana, lote u otros</label>
+<input type="text" id="fDireccion">
+<label>Urbanización, referencia u otros</label>
+<input type="text" id="fUrbanizacion">
+<label>Distrito y provincia</label>
+<input type="text" id="fDistrito">
+
+<h3>III. Datos del representante legal o apoderado</h3>
+<label>Apellidos y nombres</label>
+<input type="text" id="fRepresentante">
+<label>DNI o carné de extranjería (8 dígitos)</label>
+<input type="text" id="fDniRep">
+<label>Número del asiento SUNARP</label>
+<input type="text" id="fSunarp">
+
+<div id="seccionEstablecimiento">
+<h3>IV. Datos del establecimiento</h3>
+<label>Nombre comercial</label>
+<input type="text" id="fComercial">
+<label>Horario de atención</label>
+<input type="text" id="fHorario">
+<label>Código CIIU</label>
+<input type="text" id="fCiiu">
+<label>Giro/s del negocio</label>
+<input type="text" id="fGiro">
+<label>Actividad del establecimiento</label>
+<input type="text" id="fActividad">
+<label>Zonificación</label>
+<input type="text" id="fZonificacion">
+
+<h3>V. Declaración jurada</h3>
+<label><input type="checkbox" class="dj" value="1"> 1 = Cuento con poder suficiente vigente para actuar como representante legal</label>
+<label><input type="checkbox" class="dj" value="2"> 2 = El establecimiento cumple con las condiciones de seguridad en edificaciones</label>
+<label><input type="checkbox" class="dj" value="3"> 3 = El establecimiento cumple con la dotación reglamentaria de estacionamientos</label>
+<label><input type="checkbox" class="dj" value="4"> 4 = Cuento con título profesional vigente y habilitado (servicios de salud)</label>
+</div>
+
+<label>Observaciones o comentarios del solicitante</label>
+<textarea id="fComentarios"></textarea>
+
+<div id="resFormulario" class="resultado"></div>
+<button class="accion" onclick="siguientePaso1()">Siguiente</button>
+</section>
+
+<section id="paso2" class="paso">
+<h2>Paso 2: Verificación de la personería</h2>
+
+<label>Tipo de solicitante</label>
+<select id="tipo" onchange="cambiarTipo()">
+<option value="1">Persona Natural</option>
+<option value="2">Persona Jurídica</option>
+</select>
+<label>Nombre o razón social</label>
+<input type="text" id="pNombre">
+
+<div id="natural">
+<label>RUC (11 dígitos)</label>
+<input type="text" id="nRuc">
+<label>DNI o carné de extranjería (8 dígitos)</label>
+<input type="text" id="nDni">
+<label>¿Actúa mediante representante?</label>
+<select id="nResp" onchange="cambiarRep()">
+<option value="NO">NO</option>
+<option value="SI">SI</option>
+</select>
+<div id="representante" class="oculto">
+<label>DNI o carné del representante (8 dígitos)</label>
+<input type="text" id="nDniRep">
+<label>¿Presenta carta poder?</label>
+<select id="nCarta"><option value="SI">SI</option><option value="NO">NO</option></select>
+<label>¿La firma está legalizada?</label>
+<select id="nFirma"><option value="SI">SI</option><option value="NO">NO</option></select>
+<label>¿Presenta DNI del poderdante?</label>
+<select id="nDniPod"><option value="SI">SI</option><option value="NO">NO</option></select>
+</div>
+</div>
+
+<div id="juridica" class="oculto">
+<label>RUC de la empresa (11 dígitos)</label>
+<input type="text" id="jRuc">
+<label>DNI o carné del representante legal (8 dígitos)</label>
+<input type="text" id="jDniRep">
+<label>Número de partida electrónica</label>
+<input type="text" id="jPartida">
+<label>Asiento de inscripción (SUNARP)</label>
+<input type="text" id="jAsiento">
+<label>Año de vencimiento del poder</label>
+<input type="number" id="jAnio">
+<label>¿La partida y el asiento son correctos?</label>
+<select id="jPartidaOk"><option value="SI">SI</option><option value="NO">NO</option></select>
+<label>¿Los datos están completos?</label>
+<select id="jDatosOk"><option value="SI">SI</option><option value="NO">NO</option></select>
+</div>
+
+<label>¿Aprobación final del trámite?</label>
+<select id="pAprobacion"><option value="SI">SI</option><option value="NO">NO</option></select>
+
+<div id="resPersoneria" class="resultado"></div>
+<div class="botones">
+<button class="volver" onclick="irAPaso(1)">Atrás</button>
+<button class="accion" onclick="verificarPersoneria()">Verificar</button>
+<button id="btnPaso2" class="accion oculto" onclick="irAPaso(3)">Siguiente</button>
+</div>
+</section>
+
+<section id="paso3" class="paso">
+<h2>Paso 3: Determinación de la ruta</h2>
+<label>Área del establecimiento (m²)</label>
+<input type="number" id="rArea" step="any" onchange="determinarRuta()">
+<label>Proporción de almacenamiento respecto al área total (decimal)</label>
+<input type="number" id="rAlmacenamiento" step="any" onchange="determinarRuta()">
+<div id="resRuta" class="resultado"></div>
+<div class="botones">
+<button class="volver" onclick="irAPaso(2)">Atrás</button>
+</div>
+</section>
+
+<section id="paso4" class="paso">
+<h2>Paso 4: Inspección técnica de seguridad (ITSDC)</h2>
+<div id="resumen" class="resultado ok"></div>
+
+<div id="bloqueExPost" class="oculto">
+<h3>ITSDC básica ex post</h3>
+<label>Actividad o giro del local</label>
+<input type="text" id="xGiro">
+<label>Área del local (m²)</label>
+<input type="number" id="xArea" step="any">
+<label>Área de almacenamiento (m²)</label>
+<input type="number" id="xAlmacenamiento" step="any">
+<label>¿Presenta Declaración Jurada de cumplimiento de seguridad?</label>
+<select id="xDj"><option value="S">S</option><option value="N">N</option></select>
+<label>¿El local cumple con todas las medidas de seguridad?</label>
+<select id="xCumple"><option value="S">S</option><option value="N">N</option></select>
+<label>¿El administrador subsanó las observaciones?</label>
+<select id="xSubsano"><option value="S">S</option><option value="N">N</option></select>
+<button class="accion" onclick="itsdcExPost()">Evaluar</button>
+<div id="resExPost" class="resultado"></div>
+</div>
+
+<div id="bloqueExAnte" class="oculto">
+<h3>ITSDC básica ex ante</h3>
+<label>Área del local (m²)</label>
+<input type="number" id="eArea" step="any">
+<label>¿Cuenta con planos firmados?</label>
+<select id="ePlanos"><option value="S">S</option><option value="N">N</option></select>
+<label>¿Cuenta con certificados de operatividad?</label>
+<select id="eCertificados"><option value="S">S</option><option value="N">N</option></select>
+<label>¿El establecimiento aprueba la inspección in situ?</label>
+<select id="eAprueba"><option value="S">S</option><option value="N">N</option></select>
+<label>¿Se subsanaron las observaciones?</label>
+<select id="eSubsana"><option value="S">S</option><option value="N">N</option></select>
+<button class="accion" onclick="itsdcExAnte()">Evaluar</button>
+<div id="resExAnte" class="resultado"></div>
+</div>
+
+<div id="bloqueIndeci" class="oculto">
+<h3>ITSDC por INDECI</h3>
+<label>Área total del establecimiento (m²)</label>
+<input type="number" id="iArea" step="any">
+<label>Aforo máximo proyectado</label>
+<input type="number" id="iAforo">
+<label>¿Memoria de estructuras OK?</label>
+<select id="iEstruc"><option value="S">S</option><option value="N">N</option></select>
+<label>¿Proyecto eléctrico y pozo a tierra OK?</label>
+<select id="iElect"><option value="S">S</option><option value="N">N</option></select>
+<label>¿Sistema contra incendios OK?</label>
+<select id="iPci"><option value="S">S</option><option value="N">N</option></select>
+<label>¿El resultado de las pruebas de campo fue favorable?</label>
+<select id="iPruebas"><option value="S">S</option><option value="N">N</option></select>
+<label>¿Se levantó el 100% de las observaciones?</label>
+<select id="iLevanto"><option value="S">S</option><option value="N">N</option></select>
+<button class="accion" onclick="itsdcIndeci()">Evaluar</button>
+<div id="resIndeci" class="resultado"></div>
+</div>
+
+<div class="botones">
+<button class="volver" onclick="irAPaso(3)">Atrás</button>
+<button class="volver" onclick="location.reload()">Nuevo trámite</button>
+</div>
+</section>
+
+</main>
+
+<script>
+var temporizador = 0;
+var areaRuta = 0;
+var almacenamientoRuta = 0;
+var rutaAsignada = 0;
+
+function valor(id) {
+    return document.getElementById(id).value.trim();
+}
+
+function mostrar(id, texto, clase) {
+    var caja = document.getElementById(id);
+    caja.className = "resultado " + clase;
+    caja.innerText = texto;
+}
+
+function irAPaso(numero) {
+    var pasos = document.getElementsByClassName("paso");
+    for (var i = 0; i < pasos.length; i++) {
+        pasos[i].classList.remove("visible");
+    }
+    document.getElementById("paso" + numero).classList.add("visible");
+
+    for (var j = 1; j <= 4; j++) {
+        var indicador = document.getElementById("i" + j);
+        indicador.classList.remove("activo");
+        indicador.classList.remove("hecho");
+        if (j == numero) {
+            indicador.classList.add("activo");
+        }
+        if (j < numero) {
+            indicador.classList.add("hecho");
+        }
+    }
+    window.scrollTo(0, 0);
+}
+
+function cambiarModalidad() {
+    var modalidad = valor("modalidad");
+    document.getElementById("extra6").classList.add("oculto");
+    document.getElementById("extra8").classList.add("oculto");
+    document.getElementById("extra9").classList.add("oculto");
+    document.getElementById("seccionEstablecimiento").classList.remove("oculto");
+
+    if (modalidad == "6") {
+        document.getElementById("extra6").classList.remove("oculto");
+    }
+    if (modalidad == "8") {
+        document.getElementById("extra8").classList.remove("oculto");
+    }
+    if (modalidad == "9") {
+        document.getElementById("extra9").classList.remove("oculto");
+    }
+    if (modalidad == "6" || modalidad == "7" || modalidad == "8") {
+        document.getElementById("seccionEstablecimiento").classList.add("oculto");
+    }
+}
+
+function siguientePaso1() {
+    if (valor("fFecha") == "") {
+        mostrar("resFormulario", "Ingrese la fecha.", "error");
+        return;
+    }
+    if (valor("fNombre") == "") {
+        mostrar("resFormulario", "Ingrese los apellidos y nombres o la razón social.", "error");
+        return;
+    }
+    if (valor("fDni").length != 8) {
+        mostrar("resFormulario", "El DNI o carné del solicitante debe tener 8 dígitos.", "error");
+        return;
+    }
+    if (valor("fRuc").length != 11) {
+        mostrar("resFormulario", "El RUC debe tener 11 dígitos.", "error");
+        return;
+    }
+    if (valor("fTelefono").length != 9) {
+        mostrar("resFormulario", "El teléfono debe tener 9 dígitos.", "error");
+        return;
+    }
+    if (valor("fDniRep").length != 8) {
+        mostrar("resFormulario", "El DNI o carné del representante debe tener 8 dígitos.", "error");
+        return;
+    }
+
+    document.getElementById("resFormulario").className = "resultado";
+    document.getElementById("pNombre").value = valor("fNombre");
+    document.getElementById("nRuc").value = valor("fRuc");
+    document.getElementById("nDni").value = valor("fDni");
+    document.getElementById("jRuc").value = valor("fRuc");
+    document.getElementById("jDniRep").value = valor("fDniRep");
+    document.getElementById("nDniRep").value = valor("fDniRep");
+    irAPaso(2);
+}
+
+function cambiarTipo() {
+    if (valor("tipo") == "1") {
+        document.getElementById("natural").classList.remove("oculto");
+        document.getElementById("juridica").classList.add("oculto");
+    } else {
+        document.getElementById("natural").classList.add("oculto");
+        document.getElementById("juridica").classList.remove("oculto");
+    }
+}
+
+function cambiarRep() {
+    if (valor("nResp") == "SI") {
+        document.getElementById("representante").classList.remove("oculto");
+    } else {
+        document.getElementById("representante").classList.add("oculto");
+    }
+}
+
+function verificarPersoneria() {
+    var anioActual = 2026;
+    var tipo = valor("tipo");
+    var nombre = valor("pNombre");
+    var conformes = false;
+    document.getElementById("btnPaso2").classList.add("oculto");
+
+    if (nombre == "") {
+        mostrar("resPersoneria", "Ingrese el nombre o razón social.", "error");
+        return;
+    }
+
+    if (tipo == "1") {
+        if (valor("nRuc").length != 11) {
+            mostrar("resPersoneria", "El RUC debe tener 11 dígitos.", "error");
+            return;
+        }
+        if (valor("nDni").length != 8) {
+            mostrar("resPersoneria", "El DNI o carné debe tener 8 dígitos.", "error");
+            return;
+        }
+        if (valor("nResp") == "SI") {
+            var valido = valor("nDniRep").length == 8 && valor("nCarta") == "SI" && valor("nFirma") == "SI" && valor("nDniPod") == "SI";
+            if (valido == false) {
+                mostrar("resPersoneria", "OBSERVACIÓN: Documentos observados. Ingréselos de nuevo.", "aviso");
+                return;
+            }
+            conformes = true;
+        } else {
+            mostrar("resPersoneria", "OBSERVACIÓN: No actúa mediante representante.\nSOLICITUD RECHAZADA para: " + nombre, "error");
+            return;
+        }
+    } else {
+        if (valor("jRuc").length != 11) {
+            mostrar("resPersoneria", "El RUC de la empresa debe tener 11 dígitos.", "error");
+            return;
+        }
+        if (valor("jDniRep").length != 8) {
+            mostrar("resPersoneria", "El DNI o carné del representante debe tener 8 dígitos.", "error");
+            return;
+        }
+        if (valor("jPartida") == "" || valor("jAsiento") == "" || valor("jAnio") == "") {
+            mostrar("resPersoneria", "Complete la partida, el asiento y el año de vencimiento del poder.", "error");
+            return;
+        }
+        if (Number(valor("jAnio")) < anioActual) {
+            mostrar("resPersoneria", "OBSERVACIÓN: Vigencia vencida.", "aviso");
+            return;
+        }
+        if (valor("jPartidaOk") != "SI" || valor("jDatosOk") != "SI") {
+            mostrar("resPersoneria", "OBSERVACIÓN: Partida o datos mal. Verifique de nuevo.", "aviso");
+            return;
+        }
+        conformes = true;
+    }
+
+    if (conformes == true) {
+        var texto = "REQUISITOS CONFORMES\n* Verificación de documentos\n* Emisión de licencia de funcionamiento\n";
+        if (valor("pAprobacion") == "SI") {
+            mostrar("resPersoneria", texto + "SOLICITUD APROBADA para: " + nombre, "ok");
+            document.getElementById("btnPaso2").classList.remove("oculto");
+        } else {
+            mostrar("resPersoneria", texto + "SOLICITUD RECHAZADA para: " + nombre, "error");
+        }
+    }
+}
+
+function determinarRuta() {
+    var area = Number(valor("rArea"));
+    var almacenamiento = Number(valor("rAlmacenamiento"));
+    areaRuta = area;
+    almacenamientoRuta = almacenamiento;
+    rutaAsignada = 0;
+
+    if (valor("rArea") == "" || valor("rAlmacenamiento") == "") {
+        return;
+    }
+
+    if (area > 0 && almacenamiento >= 0) {
+        if (area <= 100 && almacenamiento <= 0.3) {
+            rutaAsignada = 1;
+            mostrar("resRuta", "RUTA 1: INSPECCIÓN BÁSICA EX POST\nDirigiendo a la inspección...", "ok");
+        } else {
+            if (area <= 500) {
+                rutaAsignada = 2;
+                mostrar("resRuta", "RUTA 2: INSPECCIÓN BÁSICA EX ANTE\nDirigiendo a la inspección...", "ok");
+            } else {
+                rutaAsignada = 3;
+                mostrar("resRuta", "RUTA 3: INSPECCIÓN DE DETALLE O MULTIDISCIPLINARIA\nDirigiendo a la inspección...", "ok");
+            }
+        }
+        clearTimeout(temporizador);
+        temporizador = setTimeout(derivarITSDC, 1200);
+    } else {
+        mostrar("resRuta", "Error: el área debe ser mayor que cero y el almacenamiento no puede ser negativo.", "error");
+    }
+}
+
+function derivarITSDC() {
+    document.getElementById("bloqueExPost").classList.add("oculto");
+    document.getElementById("bloqueExAnte").classList.add("oculto");
+    document.getElementById("bloqueIndeci").classList.add("oculto");
+
+    var texto = "Solicitante: " + valor("fNombre") + "\n";
+    texto = texto + "Modalidad: " + document.getElementById("modalidad").selectedOptions[0].text + "\n";
+    texto = texto + "Área: " + areaRuta + " m² - Almacenamiento: " + almacenamientoRuta + "\n";
+
+    if (rutaAsignada == 1) {
+        texto = texto + "Ruta 1: ITSDC básica ex post";
+        document.getElementById("xGiro").value = valor("fGiro");
+        document.getElementById("xArea").value = areaRuta;
+        document.getElementById("xAlmacenamiento").value = areaRuta * almacenamientoRuta;
+        document.getElementById("bloqueExPost").classList.remove("oculto");
+    }
+    if (rutaAsignada == 2) {
+        texto = texto + "Ruta 2: ITSDC básica ex ante";
+        document.getElementById("eArea").value = areaRuta;
+        document.getElementById("bloqueExAnte").classList.remove("oculto");
+    }
+    if (rutaAsignada == 3) {
+        texto = texto + "Ruta 3: ITSDC por INDECI";
+        document.getElementById("iArea").value = areaRuta;
+        document.getElementById("bloqueIndeci").classList.remove("oculto");
+    }
+
+    mostrar("resumen", texto, "ok");
+    irAPaso(4);
+}
+
+function itsdcExPost() {
+    var area = Number(valor("xArea"));
+    var almacenamiento = Number(valor("xAlmacenamiento"));
+
+    if (valor("xGiro") == "" || valor("xArea") == "" || valor("xAlmacenamiento") == "") {
+        mostrar("resExPost", "Complete el giro, el área y el almacenamiento.", "error");
+        return;
+    }
+
+    if (area <= 100 && almacenamiento <= area * 0.30) {
+        if (valor("xDj") == "S") {
+            var texto = "Licencia y certificado emitidos de forma inmediata\n";
+            if (valor("xCumple") == "S") {
+                mostrar("resExPost", texto + "Resultado: Inspección favorable", "ok");
+            } else {
+                texto = texto + "Resultado: observado, tiene plazo de subsanación\n";
+                if (valor("xSubsano") == "S") {
+                    mostrar("resExPost", texto + "Reinspección favorable", "ok");
+                } else {
+                    mostrar("resExPost", texto + "Revocación de licencia", "error");
+                }
+            }
+        } else {
+            mostrar("resExPost", "Falta Declaración Jurada", "aviso");
+        }
+    } else {
+        mostrar("resExPost", "No corresponde a modalidad Ex-Post\nDerivado a la ruta ITSDC Ex-Ante", "aviso");
+    }
+}
+
+function itsdcExAnte() {
+    var area = Number(valor("eArea"));
+
+    if (valor("eArea") == "") {
+        mostrar("resExAnte", "Ingrese el área del local.", "error");
+        return;
+    }
+
+    if (area > 100 && area <= 500) {
+        if (valor("ePlanos") == "S" && valor("eCertificados") == "S") {
+            var texto = "Expediente aprobado. Ejecutando inspección\n";
+            if (valor("eAprueba") == "S") {
+                mostrar("resExAnte", texto + "Inspección favorable. Se emite Certificado ITSE", "ok");
+            } else {
+                texto = texto + "Con observaciones. Se otorga plazo.\n";
+                if (valor("eSubsana") == "S") {
+                    mostrar("resExAnte", texto + "Reinspección aprobada", "ok");
+                } else {
+                    mostrar("resExAnte", texto + "Trámite improcedente", "error");
+                }
+            }
+        } else {
+            mostrar("resExAnte", "Expediente incompleto", "aviso");
+        }
+    } else {
+        mostrar("resExAnte", "Fuera del rango para Ex-Ante", "aviso");
+    }
+}
+
+function itsdcIndeci() {
+    var area = Number(valor("iArea"));
+    var aforo = Number(valor("iAforo"));
+
+    if (valor("iArea") == "" || valor("iAforo") == "") {
+        mostrar("resIndeci", "Ingrese el área y el aforo.", "error");
+        return;
+    }
+
+    if (area > 500 || aforo > 500) {
+        if (valor("iEstruc") == "S" && valor("iElect") == "S" && valor("iPci") == "S") {
+            var texto = "Conformidad documentaria OK. Ejecutando pruebas de panel...\n";
+            if (valor("iPruebas") == "S") {
+                mostrar("resIndeci", texto + "Emisión de resolución favorable y Certificado de Seguridad.", "ok");
+            } else {
+                texto = texto + "Acta con observaciones técnicas complejas.\n";
+                if (valor("iLevanto") == "S") {
+                    mostrar("resIndeci", texto + "Reinspección favorable. Emitiendo ITSE.", "ok");
+                } else {
+                    mostrar("resIndeci", texto + "Improcedente / Clausura preventiva.", "error");
+                }
+            }
+        } else {
+            mostrar("resIndeci", "Expediente denegado.", "error");
+        }
+    } else {
+        mostrar("resIndeci", "No califica para inspección multidisciplinaria.", "aviso");
+    }
+}
+</script>
+</body>
+</html>

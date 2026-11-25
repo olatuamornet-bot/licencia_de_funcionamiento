@@ -1,14 +1,10 @@
-function abrir(id, boton) {
-    var modulos = document.getElementsByClassName("modulo");
-    for (var i = 0; i < modulos.length; i++) {
-        modulos[i].classList.remove("visible");
-    }
-    var tabs = document.getElementsByClassName("tab");
-    for (var j = 0; j < tabs.length; j++) {
-        tabs[j].classList.remove("activo");
-    }
-    document.getElementById(id).classList.add("visible");
-    boton.classList.add("activo");
+var preguntas = [];
+var areaRuta = 0;
+var almacenamientoRuta = 0;
+var rutaAsignada = 0;
+
+function valor(id) {
+    return document.getElementById(id).value.trim();
 }
 
 function mostrar(id, texto, clase) {
@@ -17,13 +13,86 @@ function mostrar(id, texto, clase) {
     caja.innerText = texto;
 }
 
-function valor(id) {
-    return document.getElementById(id).value.trim();
+function irAPaso(numero) {
+    var pasos = document.getElementsByClassName("paso");
+    for (var i = 0; i < pasos.length; i++) {
+        pasos[i].classList.remove("visible");
+    }
+    document.getElementById("paso" + numero).classList.add("visible");
+
+    for (var j = 1; j <= 4; j++) {
+        var indicador = document.getElementById("i" + j);
+        indicador.classList.remove("activo");
+        indicador.classList.remove("hecho");
+        if (j == numero) {
+            indicador.classList.add("activo");
+        }
+        if (j < numero) {
+            indicador.classList.add("hecho");
+        }
+    }
+    window.scrollTo(0, 0);
+}
+
+function cambiarModalidad() {
+    var modalidad = valor("modalidad");
+    document.getElementById("extra6").classList.add("oculto");
+    document.getElementById("extra8").classList.add("oculto");
+    document.getElementById("extra9").classList.add("oculto");
+    document.getElementById("seccionEstablecimiento").classList.remove("oculto");
+
+    if (modalidad == "6") {
+        document.getElementById("extra6").classList.remove("oculto");
+    }
+    if (modalidad == "8") {
+        document.getElementById("extra8").classList.remove("oculto");
+    }
+    if (modalidad == "9") {
+        document.getElementById("extra9").classList.remove("oculto");
+    }
+    if (modalidad == "6" || modalidad == "7" || modalidad == "8") {
+        document.getElementById("seccionEstablecimiento").classList.add("oculto");
+    }
+}
+
+function siguientePaso1() {
+    if (valor("fFecha") == "") {
+        mostrar("resFormulario", "Ingrese la fecha.", "error");
+        return;
+    }
+    if (valor("fNombre") == "") {
+        mostrar("resFormulario", "Ingrese los apellidos y nombres o la razón social.", "error");
+        return;
+    }
+    if (valor("fDni").length != 8) {
+        mostrar("resFormulario", "El DNI o carné del solicitante debe tener 8 dígitos.", "error");
+        return;
+    }
+    if (valor("fRuc").length != 11) {
+        mostrar("resFormulario", "El RUC debe tener 11 dígitos.", "error");
+        return;
+    }
+    if (valor("fTelefono").length != 9) {
+        mostrar("resFormulario", "El teléfono debe tener 9 dígitos.", "error");
+        return;
+    }
+    if (valor("fDniRep").length != 8) {
+        mostrar("resFormulario", "El DNI o carné del representante debe tener 8 dígitos.", "error");
+        return;
+    }
+
+    document.getElementById("resFormulario").className = "resultado";
+    document.getElementById("pNombre").value = valor("fNombre");
+    document.getElementById("nRuc").value = valor("fRuc");
+    document.getElementById("nDni").value = valor("fDni");
+    document.getElementById("jRuc").value = valor("fRuc");
+    document.getElementById("jDniRep").value = valor("fDniRep");
+    document.getElementById("nDniRep").value = valor("fDniRep");
+    irAPaso(2);
 }
 
 function cambiarTipo() {
-    var tipo = valor("tipo");
-    if (tipo == "1") {
+    if (valor("tipo") == "1") {
         document.getElementById("natural").classList.remove("oculto");
         document.getElementById("juridica").classList.add("oculto");
     } else {
@@ -45,6 +114,7 @@ function verificarPersoneria() {
     var tipo = valor("tipo");
     var nombre = valor("pNombre");
     var conformes = false;
+    document.getElementById("btnPaso2").classList.add("oculto");
 
     if (nombre == "") {
         mostrar("resPersoneria", "Ingrese el nombre o razón social.", "error");
@@ -99,93 +169,22 @@ function verificarPersoneria() {
         var texto = "REQUISITOS CONFORMES\n* Verificación de documentos\n* Emisión de licencia de funcionamiento\n";
         if (valor("pAprobacion") == "SI") {
             mostrar("resPersoneria", texto + "SOLICITUD APROBADA para: " + nombre, "ok");
+            document.getElementById("btnPaso2").classList.remove("oculto");
         } else {
             mostrar("resPersoneria", texto + "SOLICITUD RECHAZADA para: " + nombre, "error");
         }
     }
 }
 
-function cambiarModalidad() {
-    var modalidad = valor("modalidad");
-    document.getElementById("extra6").classList.add("oculto");
-    document.getElementById("extra8").classList.add("oculto");
-    document.getElementById("extra9").classList.add("oculto");
-    document.getElementById("seccionEstablecimiento").classList.remove("oculto");
-
-    if (modalidad == "6") {
-        document.getElementById("extra6").classList.remove("oculto");
-    }
-    if (modalidad == "8") {
-        document.getElementById("extra8").classList.remove("oculto");
-    }
-    if (modalidad == "9") {
-        document.getElementById("extra9").classList.remove("oculto");
-    }
-    if (modalidad == "6" || modalidad == "7" || modalidad == "8") {
-        document.getElementById("seccionEstablecimiento").classList.add("oculto");
-    }
-}
-
-function registrarFormulario() {
-    var modalidad = valor("modalidad");
-    var pass = 0;
-    if (modalidad == "6" || modalidad == "7" || modalidad == "8") {
-        pass = 1;
-    }
-
-    if (valor("fFecha") == "") {
-        mostrar("resFormulario", "Ingrese la fecha.", "error");
-        return;
-    }
-    if (valor("fNombre") == "") {
-        mostrar("resFormulario", "Ingrese los apellidos y nombres o la razón social.", "error");
-        return;
-    }
-    if (valor("fDni").length != 8) {
-        mostrar("resFormulario", "El DNI o carné del solicitante debe tener 8 dígitos.", "error");
-        return;
-    }
-    if (valor("fRuc").length != 11) {
-        mostrar("resFormulario", "El RUC debe tener 11 dígitos.", "error");
-        return;
-    }
-    if (valor("fTelefono").length != 9) {
-        mostrar("resFormulario", "El teléfono debe tener 9 dígitos.", "error");
-        return;
-    }
-    if (valor("fDniRep").length != 8) {
-        mostrar("resFormulario", "El DNI o carné del representante debe tener 8 dígitos.", "error");
-        return;
-    }
-
-    var texto = "Modalidad de trámite registrado: " + document.getElementById("modalidad").selectedOptions[0].text + "\n";
-    texto = texto + "Solicitante: " + valor("fNombre") + "\n";
-    texto = texto + "Representante: " + valor("fRepresentante") + "\n";
-
-    if (pass == 0) {
-        var marcados = document.querySelectorAll(".dj:checked");
-        var lista = "";
-        for (var i = 0; i < marcados.length; i++) {
-            lista = lista + " " + marcados[i].value;
-        }
-        texto = texto + "Establecimiento: " + valor("fComercial") + "\n";
-        texto = texto + "Declaración jurada, opciones:" + lista + "\n";
-    }
-
-    texto = texto + "Datos ingresados correctamente.";
-    mostrar("resFormulario", texto, "ok");
-}
-
-var preguntas = [];
-
 function determinarRuta() {
     var area = Number(valor("rArea"));
     var almacenamiento = Number(valor("rAlmacenamiento"));
-    var ruta = 0;
+    areaRuta = area;
+    almacenamientoRuta = almacenamiento;
+    rutaAsignada = 0;
 
     document.getElementById("preguntasRuta").innerHTML = "";
     document.getElementById("btnVerificarRuta").classList.add("oculto");
-    mostrar("resVerificacion", "", "");
     document.getElementById("resVerificacion").className = "resultado";
 
     if (valor("rArea") == "" || valor("rAlmacenamiento") == "") {
@@ -195,7 +194,7 @@ function determinarRuta() {
 
     if (area > 0 && almacenamiento >= 0) {
         if (area <= 100 && almacenamiento <= 0.3) {
-            ruta = 1;
+            rutaAsignada = 1;
             mostrar("resRuta", "RUTA 1: INSPECCIÓN BÁSICA EX POST", "ok");
             preguntas = [
                 ["¿Presenta la Declaración Jurada de Observancia de Condiciones de Seguridad?", "Falta presentar la declaración jurada de seguridad."],
@@ -203,28 +202,25 @@ function determinarRuta() {
                 ["¿Cumple los requisitos aplicables del Artículo 7?", "Faltan requisitos del Artículo 7."],
                 ["¿Cumple la zonificación y compatibilidad de uso?", "No cumple zonificación o compatibilidad de uso."],
                 ["¿Pagó la tasa municipal?", "Pendiente: pagar la tasa municipal."],
-                ["¿La municipalidad otorgó la licencia?", "Licencia no otorgada."],
-                ["¿Se realizó la Inspección Básica Ex Post?", "Inspección Ex Post pendiente."]
+                ["¿La municipalidad otorgó la licencia?", "Licencia no otorgada."]
             ];
         } else {
             if (area <= 500) {
-                ruta = 2;
+                rutaAsignada = 2;
                 mostrar("resRuta", "RUTA 2: INSPECCIÓN BÁSICA EX ANTE", "ok");
                 preguntas = [
                     ["¿Presenta la solicitud de licencia?", "Falta presentar la solicitud de licencia."],
                     ["¿Cumple los requisitos del Artículo 7?", "Faltan requisitos del Artículo 7."],
                     ["¿Cumple zonificación y compatibilidad de uso?", "No cumple zonificación o compatibilidad de uso."],
-                    ["¿Se realizó la Inspección Básica Ex Ante?", "Inspección Ex Ante pendiente."],
                     ["¿Pagó la tasa municipal?", "Pendiente: pagar la tasa municipal."],
                     ["¿La municipalidad otorgó la licencia?", "Licencia no otorgada."]
                 ];
             } else {
-                ruta = 3;
+                rutaAsignada = 3;
                 mostrar("resRuta", "RUTA 3: INSPECCIÓN DE DETALLE O MULTIDISCIPLINARIA", "ok");
                 preguntas = [
                     ["¿Solicitó la ITSDC de detalle o multidisciplinaria?", "Debe iniciar el trámite de inspección correspondiente."],
                     ["¿Pagó el derecho de tramitación ante INDECI?", "Pendiente: pagar el derecho de tramitación ante INDECI."],
-                    ["¿Obtuvo el certificado de inspección?", "Debe obtener el certificado antes de solicitar la licencia."],
                     ["¿Presenta la solicitud de licencia municipal?", "Falta presentar la solicitud de licencia."],
                     ["¿Cumple los requisitos del Artículo 7?", "Faltan requisitos del Artículo 7."],
                     ["¿Cumple zonificación y compatibilidad de uso?", "No cumple zonificación o compatibilidad de uso."],
@@ -240,7 +236,6 @@ function determinarRuta() {
         }
         document.getElementById("preguntasRuta").innerHTML = html;
         document.getElementById("btnVerificarRuta").classList.remove("oculto");
-        document.getElementById("btnVerificarRuta").setAttribute("data-ruta", ruta);
     } else {
         preguntas = [];
         mostrar("resRuta", "Error: el área debe ser mayor que cero y el almacenamiento no puede ser negativo.", "error");
@@ -248,14 +243,45 @@ function determinarRuta() {
 }
 
 function verificarRuta() {
-    var ruta = document.getElementById("btnVerificarRuta").getAttribute("data-ruta");
     for (var i = 0; i < preguntas.length; i++) {
         if (document.getElementById("q" + i).value != "1") {
             mostrar("resVerificacion", preguntas[i][1], "aviso");
             return;
         }
     }
-    mostrar("resVerificacion", "Procedimiento de Ruta " + ruta + " evaluado.", "ok");
+    mostrar("resVerificacion", "Procedimiento de Ruta " + rutaAsignada + " evaluado.", "ok");
+    derivarITSDC();
+}
+
+function derivarITSDC() {
+    document.getElementById("bloqueExPost").classList.add("oculto");
+    document.getElementById("bloqueExAnte").classList.add("oculto");
+    document.getElementById("bloqueIndeci").classList.add("oculto");
+
+    var texto = "Solicitante: " + valor("fNombre") + "\n";
+    texto = texto + "Modalidad: " + document.getElementById("modalidad").selectedOptions[0].text + "\n";
+    texto = texto + "Área: " + areaRuta + " m² - Almacenamiento: " + almacenamientoRuta + "\n";
+
+    if (rutaAsignada == 1) {
+        texto = texto + "Ruta 1: ITSDC básica ex post";
+        document.getElementById("xGiro").value = valor("fGiro");
+        document.getElementById("xArea").value = areaRuta;
+        document.getElementById("xAlmacenamiento").value = areaRuta * almacenamientoRuta;
+        document.getElementById("bloqueExPost").classList.remove("oculto");
+    }
+    if (rutaAsignada == 2) {
+        texto = texto + "Ruta 2: ITSDC básica ex ante";
+        document.getElementById("eArea").value = areaRuta;
+        document.getElementById("bloqueExAnte").classList.remove("oculto");
+    }
+    if (rutaAsignada == 3) {
+        texto = texto + "Ruta 3: ITSDC por INDECI";
+        document.getElementById("iArea").value = areaRuta;
+        document.getElementById("bloqueIndeci").classList.remove("oculto");
+    }
+
+    mostrar("resumen", texto, "ok");
+    irAPaso(4);
 }
 
 function itsdcExPost() {
