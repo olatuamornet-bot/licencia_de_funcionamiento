@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Licencia de Funcionamiento - MPT</title>
+<link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+<header>
+<h1>Trámite de Licencia de Funcionamiento</h1>
+<p>Municipalidad Provincial de Trujillo - Equipo 06</p>
+</header>
+
+<nav>
+<button class="tab activo" onclick="abrir('personeria', this)">Personería</button>
+<button class="tab" onclick="abrir('formulario', this)">Formulario</button>
+<button class="tab" onclick="abrir('ruta', this)">Ruta</button>
+<button class="tab" onclick="abrir('expost', this)">ITSDC Ex Post</button>
+<button class="tab" onclick="abrir('exante', this)">ITSDC Ex Ante</button>
+<button class="tab" onclick="abrir('indeci', this)">ITSDC INDECI</button>
+</nav>
+
+<main>
+
+<section id="personeria" class="modulo visible">
+<h2>Verificación de la personería del solicitante</h2>
+<label>Tipo de solicitante</label>
+<select id="tipo" onchange="cambiarTipo()">
+<option value="1">Persona Natural</option>
+<option value="2">Persona Jurídica</option>
+</select>
+<label>Nombre o razón social</label>
+<input type="text" id="pNombre">
+
+<div id="natural">
+<label>RUC (11 dígitos)</label>
+<input type="text" id="nRuc">
+<label>DNI o carné de extranjería (8 dígitos)</label>
+<input type="text" id="nDni">
+<label>¿Actúa mediante representante?</label>
+<select id="nResp" onchange="cambiarRep()">
+<option value="NO">NO</option>
+<option value="SI">SI</option>
+</select>
+<div id="representante" class="oculto">
+<label>DNI o carné del representante (8 dígitos)</label>
+<input type="text" id="nDniRep">
+<label>¿Presenta carta poder?</label>
+<select id="nCarta"><option value="SI">SI</option><option value="NO">NO</option></select>
+<label>¿La firma está legalizada?</label>
+<select id="nFirma"><option value="SI">SI</option><option value="NO">NO</option></select>
+<label>¿Presenta DNI del poderdante?</label>
+<select id="nDniPod"><option value="SI">SI</option><option value="NO">NO</option></select>
+</div>
+</div>
+
+<div id="juridica" class="oculto">
+<label>RUC de la empresa (11 dígitos)</label>
+<input type="text" id="jRuc">
+<label>DNI o carné del representante legal (8 dígitos)</label>
+<input type="text" id="jDniRep">
+<label>Número de partida electrónica</label>
+<input type="text" id="jPartida">
+<label>Asiento de inscripción (SUNARP)</label>
+<input type="text" id="jAsiento">
+<label>Año de vencimiento del poder</label>
+<input type="number" id="jAnio">
+<label>¿La partida y el asiento son correctos?</label>
+<select id="jPartidaOk"><option value="SI">SI</option><option value="NO">NO</option></select>
+<label>¿Los datos están completos?</label>
+<select id="jDatosOk"><option value="SI">SI</option><option value="NO">NO</option></select>
+</div>
+
+<label>¿Aprobación final del trámite?</label>
+<select id="pAprobacion"><option value="SI">SI</option><option value="NO">NO</option></select>
+
+<button class="accion" onclick="verificarPersoneria()">Verificar</button>
+<div id="resPersoneria" class="resultado"></div>
+</section>
+
+<section id="formulario" class="modulo">
+<h2>Formulario de licencia de funcionamiento</h2>
+<label>Fecha</label>
+<input type="date" id="fFecha">
+
+<h3>I. Modalidad de trámite</h3>
+<select id="modalidad" onchange="cambiarModalidad()">
+<option value="1">1 = Licencia de funcionamiento indeterminada</option>
+<option value="2">2 = Licencia de funcionamiento temporal</option>
+<option value="3">3 = Licencia más autorización de anuncio publicitario</option>
+<option value="4">4 = Licencia para cesionario</option>
+<option value="5">5 = Licencia para mercado, galería o centro comercial</option>
+<option value="6">6 = Cambio de denominación o nombre comercial</option>
+<option value="7">7 = Cese de actividades</option>
+<option value="8">8 = Transferencia de licencia de funcionamiento</option>
+<option value="9">9 = Otros</option>
+</select>
+<div id="extra6" class="oculto">
+<label>Nº de licencia de funcionamiento</label>
+<input type="text" id="fNumLic">
+<label>Nueva denominación o nombre comercial</label>
+<input type="text" id="fNuevoNombre">
+</div>
+<div id="extra8" class="oculto">
+<label>Copia simple del contrato de transferencia</label>
+<input type="file" id="fContrato">
+</div>
+<div id="extra9" class="oculto">
+<label>Especificar</label>
+<input type="text" id="fOtros">
+</div>
+
+<h3>II. Datos del solicitante</h3>
+<label>Apellidos y nombres / Razón social</label>
+<input type="text" id="fNombre">
+<label>DNI o carné de extranjería (8 dígitos)</label>
+<input type="text" id="fDni">
+<label>RUC (11 dígitos)</label>
+<input type="text" id="fRuc">
+<label>Teléfono (9 dígitos)</label>
+<input type="text" id="fTelefono">
+<label>Correo electrónico</label>
+<input type="email" id="fCorreo">
+<label>Tipo de vía</label>
+<select id="fVia">
+<option>Av.</option><option>Jr.</option><option>Ca.</option><option>Pje.</option><option>Otros</option>
+</select>
+<label>Número, interior, manzana, lote u otros</label>
+<input type="text" id="fDireccion">
+<label>Urbanización, referencia u otros</label>
+<input type="text" id="fUrbanizacion">
+<label>Distrito y provincia</label>
+<input type="text" id="fDistrito">
+
+<h3>III. Datos del representante legal o apoderado</h3>
+<label>Apellidos y nombres</label>
+<input type="text" id="fRepresentante">
+<label>DNI o carné de extranjería (8 dígitos)</label>
+<input type="text" id="fDniRep">
+<label>Número del asiento SUNARP</label>
+<input type="text" id="fSunarp">
+
+<div id="seccionEstablecimiento">
+<h3>IV. Datos del establecimiento</h3>
+<label>Nombre comercial</label>
+<input type="text" id="fComercial">
+<label>Horario de atención</label>
+<input type="text" id="fHorario">
+<label>Código CIIU</label>
+<input type="text" id="fCiiu">
+<label>Giro/s del negocio</label>
+<input type="text" id="fGiro">
+<label>Actividad del establecimiento</label>
+<input type="text" id="fActividad">
+<label>Zonificación</label>
+<input type="text" id="fZonificacion">
+
+<h3>V. Declaración jurada</h3>
+<label><input type="checkbox" class="dj" value="1"> 1 = Cuento con poder suficiente vigente para actuar como representante legal</label>
+<label><input type="checkbox" class="dj" value="2"> 2 = El establecimiento cumple con las condiciones de seguridad en edificaciones</label>
+<label><input type="checkbox" class="dj" value="3"> 3 = El establecimiento cumple con la dotación reglamentaria de estacionamientos</label>
+<label><input type="checkbox" class="dj" value="4"> 4 = Cuento con título profesional vigente y habilitado (servicios de salud)</label>
+</div>
+
+<label>Observaciones o comentarios del solicitante</label>
+<textarea id="fComentarios"></textarea>
+
+<button class="accion" onclick="registrarFormulario()">Registrar formulario</button>
+<div id="resFormulario" class="resultado"></div>
+</section>
+
+<section id="ruta" class="modulo">
+<h2>Determinación de la ruta según el área y el almacenamiento</h2>
+<label>Área del establecimiento (m²)</label>
+<input type="number" id="rArea" step="any">
+<label>Proporción de almacenamiento respecto al área total (decimal)</label>
+<input type="number" id="rAlmacenamiento" step="any">
+<button class="accion" onclick="determinarRuta()">Determinar ruta</button>
+<div id="resRuta" class="resultado"></div>
+<div id="preguntasRuta"></div>
+<button id="btnVerificarRuta" class="accion oculto" onclick="verificarRuta()">Verificar requisitos</button>
+<div id="resVerificacion" class="resultado"></div>
+</section>
+
+<section id="expost" class="modulo">
+<h2>ITSDC básica ex post</h2>
+<label>Actividad o giro del local</label>
+<input type="text" id="xGiro">
+<label>Área del local (m²)</label>
+<input type="number" id="xArea" step="any">
+<label>Área de almacenamiento (m²)</label>
+<input type="number" id="xAlmacenamiento" step="any">
+<label>¿Presenta Declaración Jurada de cumplimiento de seguridad?</label>
+<select id="xDj"><option value="S">S</option><option value="N">N</option></select>
+<label>¿El local cumple con todas las medidas de seguridad?</label>
+<select id="xCumple"><option value="S">S</option><option value="N">N</option></select>
+<label>¿El administrador subsanó las observaciones?</label>
+<select id="xSubsano"><option value="S">S</option><option value="N">N</option></select>
+<button class="accion" onclick="itsdcExPost()">Evaluar</button>
+<div id="resExPost" class="resultado"></div>
+</section>
+
+<section id="exante" class="modulo">
+<h2>ITSDC básica ex ante</h2>
+<label>Área del local (m²)</label>
+<input type="number" id="eArea" step="any">
+<label>¿Cuenta con planos firmados?</label>
+<select id="ePlanos"><option value="S">S</option><option value="N">N</option></select>
+<label>¿Cuenta con certificados de operatividad?</label>
+<select id="eCertificados"><option value="S">S</option><option value="N">N</option></select>
+<label>¿El establecimiento aprueba la inspección in situ?</label>
+<select id="eAprueba"><option value="S">S</option><option value="N">N</option></select>
+<label>¿Se subsanaron las observaciones?</label>
+<select id="eSubsana"><option value="S">S</option><option value="N">N</option></select>
+<button class="accion" onclick="itsdcExAnte()">Evaluar</button>
+<div id="resExAnte" class="resultado"></div>
+</section>
+
+<section id="indeci" class="modulo">
+<h2>ITSDC por INDECI</h2>
+<label>Área total del establecimiento (m²)</label>
+<input type="number" id="iArea" step="any">
+<label>Aforo máximo proyectado</label>
+<input type="number" id="iAforo">
+<label>¿Memoria de estructuras OK?</label>
+<select id="iEstruc"><option value="S">S</option><option value="N">N</option></select>
+<label>¿Proyecto eléctrico y pozo a tierra OK?</label>
+<select id="iElect"><option value="S">S</option><option value="N">N</option></select>
+<label>¿Sistema contra incendios OK?</label>
+<select id="iPci"><option value="S">S</option><option value="N">N</option></select>
+<label>¿El resultado de las pruebas de campo fue favorable?</label>
+<select id="iPruebas"><option value="S">S</option><option value="N">N</option></select>
+<label>¿Se levantó el 100% de las observaciones?</label>
+<select id="iLevanto"><option value="S">S</option><option value="N">N</option></select>
+<button class="accion" onclick="itsdcIndeci()">Evaluar</button>
+<div id="resIndeci" class="resultado"></div>
+</section>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
